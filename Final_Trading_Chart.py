@@ -182,4 +182,3 @@ def update_chart(n, selected_timeframe, volume_option):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
