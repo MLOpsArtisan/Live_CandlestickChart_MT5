@@ -49,7 +49,7 @@ app.layout = html.Div([
     ),
     dcc.Graph(
         id='live-candlestick-chart',
-        style={'height': '90vh', 'overflow': 'hidden'},  # Prevent scrollbars
+        style={'width': '100%', 'height': '100%'},  # Responsive width and height
         config={'displayModeBar': False}  # Hide Plotly mode bar for a cleaner look
     ),
     dcc.Interval(
@@ -57,7 +57,15 @@ app.layout = html.Div([
         interval=1 * 1000,  # Update every 1 second
         n_intervals=0
     )
-], style={'width': '100vw', 'height': '100vh', 'overflow': 'hidden'})  # Prevent scrollbars in the main container
+], style={
+    'width': '100vw',  # Full width of the viewport
+    'height': '100vh',  # Full height of the viewport
+    'overflow': 'hidden',  # Prevent scrollbars
+    'display': 'flex',  # Use flexbox for better responsiveness
+    'flexDirection': 'column',  # Arrange children in a column
+    'alignItems': 'center',  # Center-align elements horizontally
+    'justifyContent': 'center'  # Center-align elements vertically
+})
 
 
 @app.callback(
@@ -125,7 +133,7 @@ def update_chart(n, selected_timeframe, volume_option):
         title=f"Live Chart for {SYMBOL}",
         xaxis=dict(showgrid=True, gridcolor='DarkGray', showticklabels=True),
         yaxis=dict(showgrid=True, gridcolor='DarkGray', side="right", showticklabels=True),
-        height=900 if show_volume else 600,  # Adjust height based on volume chart
+        height=800 if show_volume else 600,  # Adjust height dynamically based on volume chart
         margin=dict(l=0, r=80, t=50, b=0),  # Increased right margin to display price
         xaxis_rangeslider_visible=False,
         showlegend=False,
@@ -169,13 +177,9 @@ def update_chart(n, selected_timeframe, volume_option):
     # Set consistent time display format and avoid overflow
     fig.update_xaxes(tickformat="%H:%M", matches='x')
 
-    # Display price and volume ticks without labels
-    fig.update_yaxes(showticklabels=True, title_text="")  # Shows price ticks only
-    if show_volume:
-        fig.update_yaxes(showticklabels=True, title_text="", row=2, col=1)  # Shows volume ticks only when checked
-
     return fig
 
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
