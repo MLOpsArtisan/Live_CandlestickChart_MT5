@@ -160,7 +160,7 @@ def update_chart(n, selected_timeframe, volume_option):
 
     fig.add_annotation(
         xref="paper", yref="y",
-        x=1.035, y=last_price,  # Adjust position to be slightly outside the chart
+        x=1.047, y=last_price,  # Adjust position to be slightly outside the chart
         text=f"{last_price:.2f}",  # Display live price with two decimal places
         showarrow=False,
         font=dict(color="white", size=12, family="Arial"),
