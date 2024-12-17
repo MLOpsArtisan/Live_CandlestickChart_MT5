@@ -113,3 +113,4 @@ for trade_number in range(1, 101):
 
 # Shutdown MetaTrader 5 after execution
 mt5.shutdown()
+vari = 0;
