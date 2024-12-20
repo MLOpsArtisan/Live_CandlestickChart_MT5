@@ -92,23 +92,15 @@ def open_trade(trade_type):
 for trade_number in range(1, 101):
     print(f"\nStarting Trade #{trade_number}")
 
-    # Check the current minute and decide trade type
-    current_minute = time.localtime().tm_min
-    trade_type = "buy" if current_minute % 2 == 0 else "sell"
+    trade_type = "buy" if trade_number % 2 == 0 else "sell"
 
     # Open the trade
     result = open_trade(trade_type)
 
-    # If the trade is successful, track its performance
-    if result and result.retcode == mt5.TRADE_RETCODE_DONE:
-        ticket = result.order
-        max_profit, max_loss = track_trade(ticket)
-
-        print(f"Trade #{trade_number} Completed.")
-        print(f"Max Profit: {max_profit:.2f} | Max Loss: {max_loss:.2f}")
-
-    else:
-        print(f"Trade #{trade_number} Failed to Execute.")
+    ticket = result.order
+    max_profit, max_loss = track_trade(ticket)
+    print(f"Trade #{trade_number} Completed.")
+    print(f"Max Profit: {max_profit:.2f} | Max Loss: {max_loss:.2f}")
 
 # Shutdown MT5 connection
 mt5.shutdown()
