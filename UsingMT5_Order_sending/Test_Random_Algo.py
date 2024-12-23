@@ -15,7 +15,7 @@ symbol = 'BTCUSD'
 lot_size = 0.01
 
 # Function to calculate variance (here, we'll simulate it with a random value)
-def calculate_variance(symbol, period=mt5.TIMEFRAME_M1, bars=3):
+def calculate_variance(symbol, period=mt5.TIMEFRAME_M1, bars=4):
 
     rates = mt5.copy_rates_from_pos(symbol, period, 0, bars)
     if rates is None or len(rates) < bars:
@@ -37,8 +37,6 @@ def open_buy_trade():
     if symbol_tick:
         current_ask = symbol_tick.ask
         variance = calculate_variance(symbol)
-
-        # adjusted with variance
         stop_loss = current_ask - variance
         take_profit = current_ask + variance
 
@@ -88,33 +86,25 @@ def track_trade(position_ticket):
     max_profit = -float('inf')
     max_loss = float('inf')
 
-    while True:
-        positions = mt5.positions_get()
-        for pos in positions:
-            if pos.ticket == position_ticket:
-                current_profit = pos.profit
-                max_profit = max(max_profit, current_profit)
-                max_loss = min(max_loss, current_profit)
-                print(f"Max Profit: {max_profit} | Max Loss: {max_loss}")
-                if pos.volume == 0:
-                    return max_profit, max_loss
-        time.sleep(1)
+    positions = mt5.positions_get()
+    for pos in positions:
+        if pos.ticket == position_ticket:
+            current_profit = pos.profit
+            max_profit = max(max_profit, current_profit)
+            max_loss = min(max_loss, current_profit)
+            return max_profit, max_loss
 
 for trade_number in range(1, 101):
     print(f"\nStarting Trade #{trade_number}")
 
-    current_minute = time.localtime().tm_min
-    print(f"Current minutes : {current_minute}")
-
-
-    if current_minute % 2 == 0:
+    if trade_number % 2 == 0:
         result = open_buy_trade()
     else:
         result = open_sell_trade()
+    position_ticket = result.order
+    max_profit, max_loss = track_trade(position_ticket)
+    print(f"Trade #{trade_number} - Max Profit: {max_profit} | Max Loss: {max_loss}")
+
     time.sleep(60)
-    if result and result.retcode == mt5.TRADE_RETCODE_DONE:
-        position_ticket = result.order
-        max_profit, max_loss = track_trade(position_ticket)
-        print(f"Trade #{trade_number} - Max Profit: {max_profit} | Max Loss: {max_loss}")
 
 mt5.shutdown()

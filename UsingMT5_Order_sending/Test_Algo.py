@@ -11,7 +11,7 @@ password = 'hN$K0f!iGaDr3S'
 server = 'ICMarketsSC-Demo'
 mt5.login(login, password, server)
 
-symbol = 'XAUUSD'
+symbol = 'BTCUSD'
 lot_size = 0.01
 
 # Function to fetch minimum stop level
@@ -22,7 +22,7 @@ def get_min_stop_level(symbol):
     return 0.0
 
 # Function to calculate variance from last 15 candles
-def calculate_variance(symbol, bars=35):
+def calculate_variance(symbol, bars=3):
     rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M1, 0, bars)
     if rates is None or len(rates) < bars:
         print("Not enough price data to calculate variance.")
